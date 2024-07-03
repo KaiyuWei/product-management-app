@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -31,6 +32,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public const ROLE_OPTIONS = ['supplier', 'buyer'];
 
     /**
      * Get the attributes that should be cast.
