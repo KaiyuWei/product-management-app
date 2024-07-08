@@ -10,19 +10,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class UserControllerTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->truncateUsersTable();
-    }
-
-    protected function truncateUsersTable()
-    {
-        DB::table('users')->truncate();
     }
 
     public function test_user_registration_with_valid_data()
@@ -30,9 +24,10 @@ class UserControllerTest extends TestCase
         $response = $this->postJson('/api/register', [
             'name' => 'Kai Wei',
             'email' => 'kai.wei@example.com',
-            'role' => 'supplier',
             'password' => 'password123',
         ]);
+
+        Log::info(json_encode($response));
 
         $response->assertStatus(201)
             ->assertJson([
@@ -43,7 +38,6 @@ class UserControllerTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'kai.wei@example.com',
             'name' => 'Kai Wei',
-            'role' => 'supplier',
         ]);
     }
 
@@ -52,12 +46,11 @@ class UserControllerTest extends TestCase
         $response = $this->postJson('/api/register', [
             'name' => '',
             'email' => 'not-an-email',
-            'role' => 'dummy',
             'password' => 's',
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name', 'email', 'role', 'password']);
+            ->assertJsonValidationErrors(['name', 'email', 'password']);
     }
 
     public function test_user_registration_with_missing_data()
@@ -65,7 +58,7 @@ class UserControllerTest extends TestCase
         $response = $this->postJson('/api/register', []);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name', 'email', 'role', 'password']);
+            ->assertJsonValidationErrors(['name', 'email', 'password']);
     }
 
     public function test_login_with_valid_credentials()

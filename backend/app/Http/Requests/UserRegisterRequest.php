@@ -13,8 +13,7 @@ class UserRegisterRequest extends FormRequest
         return [
             'name' => 'required|max:20|min:3',
             'email' => 'required|email|max:50',
-            'password' => 'required|min:5|max:50',
-            'role' => 'required|in:' . $roles,
+            'password' => 'required|min:5|max:50'
         ];
     }
 }
