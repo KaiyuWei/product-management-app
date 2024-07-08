@@ -4,12 +4,19 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
     public function createUser(array $data): User
     {
         return User::create($data);
+    }
+
+    public function createUserRole(int $userId, string $roleName): User
+    {
+        $className = "App\\Models\\Users\\" . ucfirst(strtolower($roleName));
+        return $className::create(['user_id' => $userId]);
     }
 
     public function findUserByEmail(string $email): User|false

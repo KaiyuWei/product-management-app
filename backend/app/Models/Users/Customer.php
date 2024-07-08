@@ -17,6 +17,8 @@ class Customer extends User implements HasRoleInterface
 
     protected $role = 'customer';
 
+    protected $fillable = ['user_id'];
+
     public function getRole(): string
     {
         return $this->role;

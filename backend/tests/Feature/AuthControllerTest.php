@@ -25,19 +25,28 @@ class AuthControllerTest extends TestCase
             'name' => 'Kai Wei',
             'email' => 'kai.wei@example.com',
             'password' => 'password123',
+            'role' => 'supplier'
         ]);
-
-        Log::info(json_encode($response));
 
         $response->assertStatus(201)
             ->assertJson([
                 'status' => 'success',
-                'data' => ['id' => 1],
+                'data' => [
+                    'id' => 1,
+                    'role' => [
+                        'id' => 1,
+                        'name' => 'supplier'
+                    ],
+                ],
             ]);
 
         $this->assertDatabaseHas('users', [
             'email' => 'kai.wei@example.com',
             'name' => 'Kai Wei',
+        ]);
+
+        $this->assertDatabaseHas('suppliers', [
+            'user_id' => 1
         ]);
     }
 
@@ -50,7 +59,7 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name', 'email', 'password']);
+            ->assertJsonValidationErrors(['name', 'role', 'email', 'password']);
     }
 
     public function test_user_registration_with_missing_data()
@@ -58,7 +67,7 @@ class AuthControllerTest extends TestCase
         $response = $this->postJson('/api/register', []);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name', 'email', 'password']);
+            ->assertJsonValidationErrors(['name', 'role', 'email', 'password']);
     }
 
     public function test_login_with_valid_credentials()

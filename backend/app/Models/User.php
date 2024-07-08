@@ -36,7 +36,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public const ROLE_OPTIONS = ['supplier', 'buyer'];
+    public const ROLE_OPTIONS = ['supplier', 'customer'];
 
     /**
      * Get the attributes that should be cast.

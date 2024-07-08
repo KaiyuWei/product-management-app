@@ -27,9 +27,18 @@ class AuthController extends Controller
 
         $user = $this->service->createUser($dataForCreatingUser);
 
+        $roleName = $validated['role'];
+        $role = $this->service->createUserRole($user->id, $roleName);
+
         return response()->json([
             'status' => 'success',
-            'data' => ['id' => $user->id],
+            'data' => [
+                'id' => $user->id,
+                'role' => [
+                    'id' => $role->id,
+                    'name' => $roleName
+                ]
+            ],
         ], 201);
     }
 

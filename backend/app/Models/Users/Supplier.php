@@ -15,6 +15,8 @@ class Supplier extends User implements HasRoleInterface
 
     private string $role = 'supplier';
 
+    protected $fillable = ['user_id'];
+
     public function getRole(): string
     {
         return $this->role;
