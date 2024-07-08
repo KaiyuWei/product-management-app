@@ -22,21 +22,21 @@ class AuthController extends Controller
         $dataForCreatingUser = [
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'role' => $validated['role'],
             'password' => Hash::make($validated['email']),
         ];
 
-        $user = $this->service->createUser($dataForCreatingUser);
-
-        $roleName = $validated['role'];
-        $role = $this->service->createUserRole($user->id, $roleName);
+        $created = $this->service->createUserWithRole($dataForCreatingUser);
+        $user = $created['user'];
+        $role = $created['role'];
 
         return response()->json([
             'status' => 'success',
             'data' => [
-                'id' => $user->id,
+                'userId' => $user->id,
                 'role' => [
                     'id' => $role->id,
-                    'name' => $roleName
+                    'name' => $role->getRole()
                 ]
             ],
         ], 201);

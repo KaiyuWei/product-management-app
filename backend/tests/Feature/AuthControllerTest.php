@@ -32,7 +32,7 @@ class AuthControllerTest extends TestCase
             ->assertJson([
                 'status' => 'success',
                 'data' => [
-                    'id' => 1,
+                    'userId' => 1,
                     'role' => [
                         'id' => 1,
                         'name' => 'supplier'

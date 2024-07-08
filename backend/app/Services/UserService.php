@@ -13,10 +13,21 @@ class UserService
         return User::create($data);
     }
 
-    public function createUserRole(int $userId, string $roleName): User
+    public function createRole(int $userId, string $roleName): User
     {
         $className = "App\\Models\\Users\\" . ucfirst(strtolower($roleName));
         return $className::create(['user_id' => $userId]);
+    }
+
+    public function createUserWithRole(array $data): array
+    {
+        $user = $this->createUser($data);
+        $role = $this->createRole($user->id, $data['role']);
+
+        return [
+            'role' => $role,
+            'user' => $user
+        ];
     }
 
     public function findUserByEmail(string $email): User|false
