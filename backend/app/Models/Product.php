@@ -15,7 +15,7 @@ class Product extends Model
     public function suppliers(): BelongsToMany
     {
         return $this->belongsToMany(Supplier::class, 'product_supplier')
-            ->withPivot('status');
+            ->withPivot('stock_quantity');
     }
 
     public function orderItems(): HasMany

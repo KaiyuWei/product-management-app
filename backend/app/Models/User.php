@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Models\HasRoleInterface;
 use App\Models\Users\Customer;
 use App\Models\Users\Supplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,15 +49,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function customer(): HasOne
-    {
-        return $this->hasOne(Customer::class);
-    }
-
-    public function supplier(): HasOne
-    {
-        return $this->hasOne(Supplier::class);
     }
 }

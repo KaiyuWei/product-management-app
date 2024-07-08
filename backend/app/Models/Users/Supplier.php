@@ -13,9 +13,11 @@ class Supplier extends User implements HasRoleInterface
 {
     use HasFactory;
 
+    private string $role = 'supplier';
+
     public function getRole(): string
     {
-        return 'supplier';
+        return $this->role;
     }
 
     public function user(): BelongsTo
@@ -26,6 +28,6 @@ class Supplier extends User implements HasRoleInterface
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_supplier')
-            ->withPivot('status');
+            ->withPivot('stock_quantity');
     }
 }
