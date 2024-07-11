@@ -18,27 +18,13 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $dataForCreatingUser = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'role' => $validated['role'],
-            'password' => Hash::make($validated['email']),
-        ];
+        $data = $this->makeDataForRegisterFromRequest($request);
 
-        $created = $this->service->createUserWithRole($dataForCreatingUser);
-        $user = $created['user'];
-        $role = $created['role'];
+        $user = $this->service->createUser($data);
 
         return response()->json([
             'status' => 'success',
-            'data' => [
-                'userId' => $user->id,
-                'role' => [
-                    'id' => $role->id,
-                    'name' => $role->getRole()
-                ]
-            ],
+            'data' => ['id' => $user->id],
         ], 201);
     }
 
@@ -59,5 +45,16 @@ class AuthController extends Controller
             'status' => 'success',
             'data' => ['token' => $token]
         ]);
+    }
+
+    private function makeDataForRegisterFromRequest(UserRegisterRequest $request): array
+    {
+        $validated = $request->validated();
+        return [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role'],
+            'password' => Hash::make($validated['email']),
+        ];
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UserService
 {
-    public function createUser(array $data): User
+    public function createOriginalUser(array $data): User
     {
         return User::create($data);
     }
@@ -19,15 +20,14 @@ class UserService
         return $className::create(['user_id' => $userId]);
     }
 
-    public function createUserWithRole(array $data): array
+    public function createUser(array $data): User
     {
-        $user = $this->createUser($data);
+        DB::beginTransaction();
+        $user = $this->createOriginalUser($data);
         $role = $this->createRole($user->id, $data['role']);
+        DB::commit();
 
-        return [
-            'role' => $role,
-            'user' => $user
-        ];
+        return $role;
     }
 
     public function findUserByEmail(string $email): User|false

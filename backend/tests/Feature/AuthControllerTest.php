@@ -31,13 +31,7 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(201)
             ->assertJson([
                 'status' => 'success',
-                'data' => [
-                    'userId' => 1,
-                    'role' => [
-                        'id' => 1,
-                        'name' => 'supplier'
-                    ],
-                ],
+                'data' => ['id' => 1],
             ]);
 
         $this->assertDatabaseHas('users', [

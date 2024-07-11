@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Users\Supplier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +16,7 @@ class ProductServiceTest extends TestCase
 
     public function test_supplier_can_view_their_products()
     {
-        $user = User::create([
-            'role' => 'supplier'
-        ]);
+        $supplier = Supplier::factory()->createSupplierWithRole()->create();
 
         $products = Product::factory()->count(3)->create([
             'supplier_id' => $supplier->id,
