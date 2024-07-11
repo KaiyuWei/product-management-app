@@ -10,12 +10,15 @@ import axios from "axios";
     const handleSubmit = async (e) => {
         e.preventDefault();
         const registerUrl = `${process.env.REACT_APP_API}/register`;
+        console.log(role);
 
         try {
-            const res = await axios.get(process.env.REACT_APP_API, {headers: {
-                    'Content-Type': 'application/json',
+            const res = await axios.post(registerUrl,
+                {name, role, email, password},
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
                 }});
-            console.log(res);
         } catch (err) {
             console.log(err);
         }
@@ -33,7 +36,8 @@ import axios from "axios";
                                    required
                                    autoFocus value = {name}
                                    onChange = {(e) => setName(e.target.value)} />
-                            <select className = "form-select form-control mb-2 required" defaultValue="default" >
+                            <select className = "form-select form-control mb-2 required" value={role} defaultValue="default"
+                                    onChange = {(e) => setRole(e.target.value)}>
                                 <option value="default" hidden >Select a role</option >
                                 <option value = "customer" >Customer</option >
                                 <option value = "supplier" >Supplier</option >
