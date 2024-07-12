@@ -1,22 +1,24 @@
 import {useState} from "react";
 import axiosForApi from "../config/axios";
+import { toast } from 'react-toastify';
 
- export default function Register() {
+export default function Register() {
      const [name, setName] = useState("");
      const [role, setRole] = useState("");
      const [email, setEmail] = useState("");
      const [password, setPassword] = useState("");
+     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const registerUrl = `${process.env.REACT_APP_API}/register`;
-        console.log(role);
+        setLoading(true);
 
         try {
-            const res = await axiosForApi.post('/register',
-                {name, role, email, password});
+            const res= await axiosForApi.post('/register', {name, role, email, password});
+            toast.success(`A ${role} is successfully registered`);
         } catch (err) {
-            console.log(err);
+            setLoading(true);
+            toast.error(err.response.data.error);
         }
     }
 
@@ -32,9 +34,9 @@ import axiosForApi from "../config/axios";
                                    required
                                    autoFocus value = {name}
                                    onChange = {(e) => setName(e.target.value)} />
-                            <select className = "form-select form-control mb-2 required" value={role} defaultValue="default"
-                                    onChange = {(e) => setRole(e.target.value)}>
-                                <option value="default" hidden >Select a role</option >
+                            <select className = "form-select form-control mb-2 required" value = {role}
+                                    onChange = {(e) => setRole(e.target.value)} >
+                                <option value = "default" hidden >Select a role</option >
                                 <option value = "customer" >Customer</option >
                                 <option value = "supplier" >Supplier</option >
                             </select >
@@ -46,6 +48,9 @@ import axiosForApi from "../config/axios";
                                    required
                                    autoFocus value = {password}
                                    onChange = {(e) => setPassword(e.target.value)} />
+                            <div className = "alert text-red-500 bg-red-200 hidden" >
+                                thisi
+                            </div >
                             <button className = "btn btn-primary col-12" >Register</button >
                         </form >
                     </div >

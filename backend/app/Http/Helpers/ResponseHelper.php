@@ -8,17 +8,13 @@ class ResponseHelper
 {
     public static function sendSuccessJsonResponse(array $data, int $code = 200): JsonResponse
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => $data,
-        ], $code);
+        return response()->json($data, $code);
     }
 
     public static function sendErrorJsonResponse(\Exception $e): JsonResponse
     {
         return response()->json([
-            'status' => 'failed',
-            'errorMessage' => $e->getMessage(),
+            'error' => $e->getMessage(),
         ], $e->getCode());
     }
 }
