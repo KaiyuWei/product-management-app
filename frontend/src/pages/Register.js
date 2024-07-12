@@ -1,5 +1,5 @@
 import {useState} from "react";
-import axios from "axios";
+import axiosForApi from "../config/axios";
 
  export default function Register() {
      const [name, setName] = useState("");
@@ -13,12 +13,8 @@ import axios from "axios";
         console.log(role);
 
         try {
-            const res = await axios.post(registerUrl,
-                {name, role, email, password},
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                }});
+            const res = await axiosForApi.post('/register',
+                {name, role, email, password});
         } catch (err) {
             console.log(err);
         }
@@ -28,7 +24,7 @@ import axios from "axios";
         <div>
             <h1 className="display-1 bg-primary text-light p-5">Register</h1>
 
-            <div className="container">
+            <div className="container mt-6">
                 <div className="row">
                     <div className="col-lg-4 offset-lg-4">
                         <form onSubmit = {handleSubmit} >

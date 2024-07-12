@@ -22,12 +22,19 @@ class UserService
 
     public function createUser(array $data): User
     {
+        if ($this->isUserExisted($data['email'])) throw new \Exception('The email is already registered', 409);
+
         DB::beginTransaction();
         $user = $this->createOriginalUser($data);
         $role = $this->createRole($user->id, $data['role']);
         DB::commit();
 
         return $role;
+    }
+
+    public function isUserExisted(string $email): bool
+    {
+        return (bool) $this->findUserByEmail($email);
     }
 
     public function findUserByEmail(string $email): User|false

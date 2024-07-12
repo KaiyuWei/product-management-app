@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\ResponseHelper;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Services\UserService;
@@ -20,12 +21,13 @@ class AuthController extends Controller
     {
         $data = $this->makeDataForRegisterFromRequest($request);
 
-        $user = $this->service->createUser($data);
+        try{
+            $user = $this->service->createUser($data);
+        } catch(\Exception $e) {
+            return ResponseHelper::sendErrorJsonResponse($e);
+        }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => ['id' => $user->id],
-        ], 201);
+        return ResponseHelper::sendSuccessJsonResponse(['id' => $user->id], 201);
     }
 
     public function login(UserLoginRequest $request): JsonResponse
@@ -35,16 +37,10 @@ class AuthController extends Controller
         try{
             $token = $this->service->authenticateByEmailAndPassword($validated['email'], $validated['password']);
         } catch(\Exception $e) {
-            return response()->json([
-                'status' => 'failed',
-                'errorMessage' => $e->getMessage()
-            ], $e->getCode());
+            return ResponseHelper::sendErrorJsonResponse($e);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => ['token' => $token]
-        ]);
+        return ResponseHelper::sendSuccessJsonResponse(['token' => $token]);
     }
 
     private function makeDataForRegisterFromRequest(UserRegisterRequest $request): array
