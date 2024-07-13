@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -38,10 +39,21 @@ class AuthController extends Controller
 
         if(Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return ResponseHelper::sendSuccessJsonResponse(['id' => Auth::id()]);
+            return ResponseHelper::sendSuccessJsonResponse(['id' => Auth::id(), 'role' => Auth::user()->role]);
         }
 
         return ResponseHelper::sendErrorJsonResponse('invalid credentials', 401);
+    }
+
+    public function logout(Request $request)
+    {
+        Log::info("Here, log out");
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return ResponseHelper::sendSuccessJsonResponse(['status' => 'Logout successfully']);
     }
 
     private function makeDataForRegisterFromRequest(UserRegisterRequest $request): array

@@ -12,9 +12,9 @@ import './App.css';
 function App() {
   return (
     <BrowserRouter>
-        <Main/>
-        <ToastContainer/>
         <AuthProvider>
+            <ToastContainer/>
+            <Main/>
             <Routes>
                 <Route path='/' element={<Home />}/>
                 <Route path='/login' element={<Login />}/>

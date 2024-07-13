@@ -1,12 +1,14 @@
 import {useState} from "react";
-import axiosForApi from "../config/axios";
+import axios from "../config/axios";
 import {useNavigate} from "react-router-dom";
 import { toast } from 'react-toastify';
+import {useAuth} from "../context/auth";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [auth, setAuth] = useAuth();
 
     const navigate = useNavigate();
 
@@ -14,10 +16,15 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            await axiosForApi.get('http://localhost:8000/sanctum/csrf-cookie');
-            const response = await axiosForApi.post('/login', {email, password});
+            await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+            const response = await axios.post('/login', {email, password});
 
+            setAuth({
+                    userId: response.data.id,
+                    role: response.data.role,
+                });
             toast.success('User logged in');
+
             navigate('/');
         } catch(e) {
             toast.error(e.response.data.error);
@@ -40,7 +47,7 @@ export default function Login() {
                                    required
                                    value = {password}
                                    onChange = {(e) => setPassword(e.target.value)} />
-                            <button className = "btn btn-primary col-12 mt-4" disabled = {loading} >Log in</button >
+                            <button className = "btn btn-primary col-12 mt-4" disabled={loading} >Log in</button >
                         </form >
                     </div >
                 </div >

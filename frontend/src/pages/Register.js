@@ -1,5 +1,5 @@
 import {useState} from "react";
-import axiosForApi from "../config/axios";
+import axios from "../config/axios";
 import { toast } from 'react-toastify';
 import {useNavigate} from "react-router-dom";
 
@@ -16,7 +16,7 @@ export default function Register() {
         setLoading(true);
 
         try {
-            const res= await axiosForApi.post('/register', {name, role, email, password});
+            const res= await axios.post('/register', {name, role, email, password});
             toast.success(`A ${role} is successfully registered`);
             navigate("/login");
         } catch (err) {

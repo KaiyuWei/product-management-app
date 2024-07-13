@@ -59,6 +59,8 @@ class User extends Authenticatable
                 return $this->hasOne(Supplier::class);
             case 'customer':
                 return $this->hasOne(Customer::class);
+            default:
+                throw new \Exception('Unrecognized role', 400);
         }
     }
 }
