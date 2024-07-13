@@ -1,6 +1,7 @@
 import {useState} from "react";
 import axiosForApi from "../config/axios";
 import { toast } from 'react-toastify';
+import {useNavigate} from "react-router-dom";
 
 export default function Register() {
      const [name, setName] = useState("");
@@ -8,6 +9,7 @@ export default function Register() {
      const [email, setEmail] = useState("");
      const [password, setPassword] = useState("");
      const [loading, setLoading] = useState(false);
+     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,6 +18,7 @@ export default function Register() {
         try {
             const res= await axiosForApi.post('/register', {name, role, email, password});
             toast.success(`A ${role} is successfully registered`);
+            navigate("/login");
         } catch (err) {
             setLoading(true);
             toast.error(err.response.data.error);
@@ -42,16 +45,13 @@ export default function Register() {
                             </select >
                             <input type = "text" placeholder = "Enter your email" className = "form-control mb-2"
                                    required
-                                   autoFocus value = {email}
+                                   value = {email}
                                    onChange = {(e) => setEmail(e.target.value)} />
                             <input type = "password" placeholder = "Enter your password" className = "form-control mb-2"
                                    required
-                                   autoFocus value = {password}
+                                   value = {password}
                                    onChange = {(e) => setPassword(e.target.value)} />
-                            <div className = "alert text-red-500 bg-red-200 hidden" >
-                                thisi
-                            </div >
-                            <button className = "btn btn-primary col-12" >Register</button >
+                            <button className = "btn btn-primary col-12 mt-4" disabled={loading} >Register</button >
                         </form >
                     </div >
                 </div >

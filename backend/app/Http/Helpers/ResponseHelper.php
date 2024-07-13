@@ -11,10 +11,10 @@ class ResponseHelper
         return response()->json($data, $code);
     }
 
-    public static function sendErrorJsonResponse(\Exception $e): JsonResponse
+    public static function sendErrorJsonResponse(string $message, int $code = 400): JsonResponse
     {
         return response()->json([
-            'error' => $e->getMessage(),
-        ], $e->getCode());
+            'error' => $message,
+        ], $code);
     }
 }

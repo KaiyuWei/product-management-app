@@ -7,7 +7,9 @@ use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -24,7 +26,7 @@ class AuthController extends Controller
         try{
             $user = $this->service->createUser($data);
         } catch(\Exception $e) {
-            return ResponseHelper::sendErrorJsonResponse($e);
+            return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }
 
         return ResponseHelper::sendSuccessJsonResponse(['id' => $user->id], 201);
@@ -32,15 +34,14 @@ class AuthController extends Controller
 
     public function login(UserLoginRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $credentials = $request->validated();
 
-        try{
-            $token = $this->service->authenticateByEmailAndPassword($validated['email'], $validated['password']);
-        } catch(\Exception $e) {
-            return ResponseHelper::sendErrorJsonResponse($e);
+        if(Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return ResponseHelper::sendSuccessJsonResponse(['id' => Auth::id()]);
         }
 
-        return ResponseHelper::sendSuccessJsonResponse(['token' => $token]);
+        return ResponseHelper::sendErrorJsonResponse('invalid credentials', 401);
     }
 
     private function makeDataForRegisterFromRequest(UserRegisterRequest $request): array
@@ -50,7 +51,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'role' => $validated['role'],
-            'password' => Hash::make($validated['email']),
+            'password' => Hash::make($validated['password']),
         ];
     }
 }

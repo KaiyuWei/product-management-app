@@ -21,7 +21,7 @@ class ProductController extends Controller
         try {
             $products = $this->service->getAllProductsForSupplier();
         } catch (\Exception $e) {
-            return ResponseHelper::sendErrorJsonResponse($e);
+            return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }
 
         return ResponseHelper::sendSuccessJsonResponse($products->toArray());

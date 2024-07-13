@@ -29,7 +29,7 @@ class UserService
         $role = $this->createRole($user->id, $data['role']);
         DB::commit();
 
-        return $role;
+        return $user;
     }
 
     public function isUserExisted(string $email): bool
