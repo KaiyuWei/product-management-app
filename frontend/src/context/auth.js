@@ -1,4 +1,4 @@
-import {useState, createContext, useContext} from "react";
+import {useState, createContext, useContext, useEffect} from "react";
 
 const AuthContext = createContext();
 
@@ -7,6 +7,13 @@ const AuthProvider = ({children}) => {
         userId: null,
         role: '',
     });
+
+    useEffect(() => {
+         const authDataInLocalStorage = localStorage.getItem('auth');
+         if (authDataInLocalStorage) setAuth(JSON.parse(authDataInLocalStorage))
+
+        console.log(auth);
+    }, []);
 
     return (
         <AuthContext.Provider value={[auth, setAuth]}>

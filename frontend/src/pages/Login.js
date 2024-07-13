@@ -19,10 +19,12 @@ export default function Login() {
             await axios.get('http://localhost:8000/sanctum/csrf-cookie');
             const response = await axios.post('/login', {email, password});
 
-            setAuth({
-                    userId: response.data.id,
-                    role: response.data.role,
-                });
+            const newAuth = {
+                userId: response.data.id,
+                role: response.data.role,
+            };
+            setAuth(newAuth);
+            localStorage.setItem('auth', JSON.stringify(newAuth));
             toast.success('User logged in');
 
             navigate('/');
