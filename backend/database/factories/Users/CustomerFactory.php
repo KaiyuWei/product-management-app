@@ -2,36 +2,37 @@
 
 namespace Database\Factories\Users;
 
-use App\Models\Users\Supplier;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Users\Customer>
  */
-class SupplierFactory extends Factory
+class CustomerFactory extends Factory
 {
-    protected $model = Supplier::class;
-
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
-        // Return the factory's default state definition.
         return [
-            // Supplier attributes if any
+            //
         ];
     }
 
     public function createSupplierWithRole()
     {
-        $service = new UserService();
         $userData = [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'),
-            'role' => 'supplier'
+            'role' => 'customer',
         ];
 
+        $service = new UserService();
         return $service->createUser($userData);
     }
 }

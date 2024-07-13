@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -49,5 +50,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function roleInstance()
+    {
+        switch($this->role) {
+            case 'supplier':
+                return $this->hasOne(Supplier::class);
+            case 'customer':
+                return $this->hasOne(Customer::class);
+        }
     }
 }
