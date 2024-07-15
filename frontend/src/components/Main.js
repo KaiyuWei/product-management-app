@@ -22,13 +22,14 @@ export default function Main() {
             toast.info('User logged out');
             navigate('/login');
         } catch(e) {
-            toast.error(e.message);
+            console.log(e.message);
+            toast.error('something went wrong');
         }
 
     }
 
     return (
-        <nav className="nav flex-1 justify-end leading-6">
+        <nav className="nav flex-1 justify-end leading-6 bg-slate-500">
             {!loggedIn && <>
                 <NavLink className="nav-link" to="/login">Login</NavLink>
                 <NavLink className="nav-link" to="/register">Register</NavLink>

@@ -11,12 +11,12 @@ class ProductService
     public function getAllProductsForSupplier(): Collection
     {
         $user = Auth::user();
-        if($user->getRole() !== 'supplier')
-        {
-            throw new \Exception('only suppliers can view their products', 401);
-        }
+//        if($user->roleInstance->getRole() !== 'supplier')
+//        {
+//            throw new \Exception('only suppliers can view their products', 401);
+//        }
 
-        $role = Supplier::where('user_id', $user->id);
+        $role = Supplier::where('user_id', $user->id)->with('products')->first();
         return $role->products;
     }
 }

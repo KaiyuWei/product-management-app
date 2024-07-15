@@ -47,7 +47,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Log::info("Here, log out");
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
