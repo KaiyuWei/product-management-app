@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "../../config/axios";
 import DataTable from "../../components/DataTable";
+import ProductCard from "../../components/ProductCard";
 
 export default function UserHome() {
     const [productData, setProductData] = useState([]);
@@ -40,6 +41,21 @@ export default function UserHome() {
         setProductData(products);
     };
 
+    const generateProductCardSet = (data) => {
+        return data.map((supplier) => {
+             return supplier.products.map((product) => {
+                return (<ProductCard
+                        name = {product.name}
+                        price = {product.price}
+                        inStock = {product.quantity}
+                        description = {product.description}
+                        supplierName = {supplier.supplierName}
+                        publishDate = {product.publishDate}
+                    />);
+            });
+        });
+    }
+
     useEffect(() => {
         fetchAndUpdateProductData();
     }, []);
@@ -49,13 +65,9 @@ export default function UserHome() {
             <div className="text-2xl mt-4 mb-2">
                 Available products:
             </div>
-            <div >
-                <DataTable
-                    columns = {columnsProductTable}
-                    data = {normalizeProductDataForDisplay(productData)}
-                />
+            <div className="flex flex-row gap-4 flex-wrap">
+                {generateProductCardSet(productData)}
             </div >
         </div >
-
     </>
 }
