@@ -14,7 +14,7 @@ class ProductService
 {
     public function getAllProductsForSupplier(User $user): Collection
     {
-        $role = Supplier::where('user_id', $user->id)->with('products')->first();
+        $role = $user->roleInstance()->with('products')->first();
         return $role->products;
     }
 

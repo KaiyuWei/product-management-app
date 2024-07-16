@@ -22,8 +22,8 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $supplierUser = Auth::user();
-            $products = $this->service->getAllProductsForSupplier($supplierUser);
+            $user = Auth::user();
+            $products = $this->service->getAllProductsForSupplier($user);
         } catch (\Exception $e) {
             return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }

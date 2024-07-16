@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::middleware(EnsureUserIsSupplier::class)->group(function () {
+        Route::get('/product/index', [ProductController::class, 'index']);
         Route::post('/product', [ProductController::class, 'create']);
     });
 });
