@@ -5,23 +5,31 @@ const DataTable = ({ columns, data}) => {
         return rowData[columnName.toLowerCase()];
     }
 
+    function generateTableHeader(columnNames) {
+        return columnNames.map((column, index) => (
+            <th key={index} scope="col">{column}</th>
+        ));
+    }
+
+    function generateTableBody(data) {
+        return data.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+                {columns.map((column, colIndex) => (
+                    <td key={colIndex}>{getValueFromRowByColumnName(row, column)}</td>
+                ))}
+            </tr>
+        ))
+    }
+
     return (
         <table className="table">
             <thead className="thead-dark">
             <tr>
-                {columns.map((column, index) => (
-                    <th key={index} scope="col">{column}</th>
-                ))}
+                {generateTableHeader(columns)}
             </tr>
             </thead>
             <tbody>
-            {data.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                    {columns.map((column, colIndex) => (
-                        <td key={colIndex}>{getValueFromRowByColumnName(row, column)}</td>
-                    ))}
-                </tr>
-            ))}
+                {generateTableBody(data)}
             </tbody>
         </table>
     );

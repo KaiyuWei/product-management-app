@@ -19,11 +19,22 @@ class ProductController extends Controller
         $this->service = new ProductService();
     }
 
-    public function index(): JsonResponse
+    public function indexProductsOfCurrentSupplierUser(): JsonResponse
     {
         try {
             $user = Auth::user();
             $products = $this->service->getAllProductsForSupplier($user);
+        } catch (\Exception $e) {
+            return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
+        }
+
+        return ResponseHelper::sendSuccessJsonResponse($products->toArray());
+    }
+
+    public function index(): JsonResponse
+    {
+        try {
+            $products = $this->service->getAllProductsWithSupplierData();
         } catch (\Exception $e) {
             return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }
