@@ -20,7 +20,7 @@ export default function Register() {
             toast.success(`A ${role} is successfully registered`);
             navigate("/login");
         } catch (err) {
-            setLoading(true);
+            setLoading(false);
             toast.error(err.response.data.error);
         }
     }

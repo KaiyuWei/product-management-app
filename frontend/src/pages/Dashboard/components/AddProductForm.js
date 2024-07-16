@@ -1,13 +1,30 @@
 import {useState} from "react";
+import axios from "../../../config/axios";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
+import {useDashboard} from "../SupplierDashboard";
 
 export default function AddProductForm() {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(null);
     const [description, setDescription] = useState('');
     const [quantity, setQuantity] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const {closeModal} = useDashboard();
 
-    const handleSubmit = () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
 
+        try {
+            const res= await axios.post('/product', {name, price, quantity, description});
+            toast.success(`Product ${name} is created`);
+            closeModal();
+        } catch (err) {
+            setLoading(false);
+            toast.error(err.response.data.error);
+        }
     }
 
     return <>
@@ -34,7 +51,7 @@ export default function AddProductForm() {
             </div >
         </div >
         <div className = "flex justify-end mt-4" >
-            <button type = "button" className = "btn btn-primary" onSubmit = {handleSubmit} >Save Changes</button >
+            <button type = "button" className = "btn btn-primary" onClick={handleSubmit} disabled={loading}>Publish Product</button >
         </div >
 
     </>;

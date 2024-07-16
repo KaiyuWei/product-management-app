@@ -23,7 +23,10 @@ class ProductService
         $product = null;
         DB::transaction(function () use($data, $supplierUser, &$product) {
             $product = new Product($data);
-            $supplierUser->roleInstance->products()->save($product, ['price' => $product->price]);
+            $supplierUser->roleInstance->products()->save($product, [
+                'price' => $product->price,
+                'stock_quantity' => $data['quantity'],
+            ]);
         });
 
         return $product;
