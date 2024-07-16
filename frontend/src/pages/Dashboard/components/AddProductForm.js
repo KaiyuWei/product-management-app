@@ -1,7 +1,6 @@
 import {useState} from "react";
 import axios from "../../../config/axios";
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
 import {useDashboard} from "../SupplierDashboard";
 
 export default function AddProductForm() {
@@ -10,8 +9,7 @@ export default function AddProductForm() {
     const [description, setDescription] = useState('');
     const [quantity, setQuantity] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-    const {closeModal} = useDashboard();
+    const {closeModal, fetchProducts} = useDashboard();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,8 +17,10 @@ export default function AddProductForm() {
 
         try {
             const res= await axios.post('/product', {name, price, quantity, description});
+
             toast.success(`Product ${name} is created`);
             closeModal();
+            fetchProducts();
         } catch (err) {
             setLoading(false);
             toast.error(err.response.data.error);
