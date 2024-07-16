@@ -2,9 +2,11 @@
 
 namespace Database\Factories\Users;
 
+use App\Services\CartService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Users\Customer>
@@ -34,5 +36,13 @@ class CustomerFactory extends Factory
 
         $service = new UserService();
         return $service->createUser($userData);
+    }
+
+    public function createCustomerWithRoleAndCart()
+    {
+        $user = $this->createCustomerWithRole();
+        (new CartService())->createCartForUser($user);
+
+        return $user;
     }
 }

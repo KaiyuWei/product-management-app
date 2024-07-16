@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\ResponseHelper;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Services\CartService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,10 @@ class AuthController extends Controller
 
         try{
             $user = $this->service->createUser($data);
+
+            if($user->role === 'customer') {
+                (new CartService())->createCartForUser($user);
+            }
         } catch(\Exception $e) {
             return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }

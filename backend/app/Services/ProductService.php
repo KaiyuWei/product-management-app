@@ -23,6 +23,7 @@ class ProductService
             $currentEntry['supplierName'] = $supplier->user->name;
             foreach($supplier->products as $product) {
                 $currentEntry['products'][] = [
+                    'id' => $product->id,
                     'name' => $product->name,
                     'price' => $product->price,
                     'quantity' => $product->pivot->stock_quantity,

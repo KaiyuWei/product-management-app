@@ -7,26 +7,6 @@ export default function UserHome() {
     const [productData, setProductData] = useState([]);
     const columnsProductTable = ['supplier name', 'description', 'product name', 'price', 'publish date', 'in stock'];
 
-    const normalizeProductDataForDisplay = (data) => {
-        const normalized = [];
-
-        data.map((supplier) => {
-            supplier.products.map((product) => {
-                const entry = [];
-                entry['supplier name'] = supplier.supplierName;
-                entry['description'] = product.description;
-                entry['product name'] = product.name;
-                entry['price'] = product.price;
-                entry['publish date'] = product.publishDate;
-                entry['in stock'] = product.quantity;
-
-                normalized.push(entry);
-            });
-        });
-
-        return normalized;
-    }
-
     const fetchProducts = async () => {
         try {
             const response = await axios.get('/product/index');
@@ -46,6 +26,7 @@ export default function UserHome() {
              return supplier.products.map((product) => {
                 return (<ProductCard
                         name = {product.name}
+                        productId = {product.id}
                         price = {product.price}
                         inStock = {product.quantity}
                         description = {product.description}

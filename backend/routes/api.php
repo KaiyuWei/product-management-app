@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Middleware\EnsureUserIsSupplier;
@@ -19,7 +20,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::middleware(EnsureUserIsCustomer::class)->group(function(){
-        Route::get('/product/index', [ProductController::class, 'index']);
+        Route::get('/product/index', [ProductController::class, 'indexForCustomer']);
+        Route::post('/cart/add', [CartController::class, 'addItemInCartForCurrentUser']);
     });
 });
 

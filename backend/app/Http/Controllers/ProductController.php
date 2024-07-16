@@ -31,7 +31,7 @@ class ProductController extends Controller
         return ResponseHelper::sendSuccessJsonResponse($products->toArray());
     }
 
-    public function index(): JsonResponse
+    public function indexForCustomer(): JsonResponse
     {
         try {
             $products = $this->service->getAllProductsWithSupplierData();

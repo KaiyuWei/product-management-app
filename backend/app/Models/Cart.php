@@ -12,6 +12,8 @@ class Cart extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['customer_id'];
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
