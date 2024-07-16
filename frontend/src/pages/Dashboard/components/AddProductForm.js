@@ -9,7 +9,7 @@ export default function AddProductForm() {
     const [description, setDescription] = useState('');
     const [quantity, setQuantity] = useState('');
     const [loading, setLoading] = useState(false);
-    const {closeModal, fetchProducts} = useDashboard();
+    const {closeModal, fetchAndUpdateProductData} = useDashboard();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +20,7 @@ export default function AddProductForm() {
 
             toast.success(`Product ${name} is created`);
             closeModal();
-            fetchProducts();
+            fetchAndUpdateProductData();
         } catch (err) {
             setLoading(false);
             toast.error(err.response.data.error);

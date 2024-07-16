@@ -11,29 +11,48 @@ export function useDashboard() {
     return useContext(DashboardContext);
 }
 
-export default function Dashboard () {
+export default function SupplierDashboard () {
     const [showModal, setShowModal] = useState(false);
-    const [data, setData] = useState([]);
+    const [productData, setProductData] = useState([]);
     const columns = ['id', 'name', 'price', 'in stock', 'description']
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
 
+    const normalizeProductDataForDisplaying = (products) => {
+        const normalized = [];
+
+        products.map(function(row) {
+            const {id, name, price, description} = row;
+            const entry = {id, name, price, description};
+            entry['in stock'] = row.pivot.stock_quantity;
+
+            normalized.push(entry);
+        })
+
+        return normalized;
+    }
+
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('/product/index');
-            setData(response.data);
+            const response = await axios.get('/products');
+            return response.data;
         } catch (e) {
             console.error(e);
         }
     };
 
+    const fetchAndUpdateProductData = async () => {
+        const products = await fetchProducts();
+        setProductData(products);
+    };
+
     useEffect(() => {
-        fetchProducts();
+        fetchAndUpdateProductData();
     }, []);
 
     return <>
-        <DashboardContext.Provider value={{closeModal, fetchProducts}}>
+        <DashboardContext.Provider value={{closeModal, fetchAndUpdateProductData}}>
             <div className="py-4 bg-blue-300">
                 <button type = "button" className = "btn btn-primary mx-3" onClick = {openModal} >
                     Add product...
@@ -45,7 +64,7 @@ export default function Dashboard () {
                 </div>
                 <DataTable
                     columns={columns}
-                    data={data}
+                    data={normalizeProductDataForDisplaying(productData)}
                 />
             </div>
 
