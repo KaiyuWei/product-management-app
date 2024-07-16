@@ -6,6 +6,7 @@ use App\Http\Helpers\ResponseHelper;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsSupplier
@@ -22,6 +23,6 @@ class EnsureUserIsSupplier
             return $next($request);
         }
 
-        return ResponseHelper::sendErrorJsonResponse("Supplier authentication required", 401);
+        return ResponseHelper::sendErrorJsonResponse("Supplier authentication required", 403);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProductRequest;
 use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ResponseHelper;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -19,7 +22,8 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $products = $this->service->getAllProductsForSupplier();
+            $supplierUser = Auth::user();
+            $products = $this->service->getAllProductsForSupplier($supplierUser);
         } catch (\Exception $e) {
             return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }
@@ -27,12 +31,19 @@ class ProductController extends Controller
         return ResponseHelper::sendSuccessJsonResponse($products->toArray());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(CreateProductRequest $request): JsonResponse
     {
-        //
+        try {
+            $supplierUser = Auth::user();
+            $validated = $request->validated();
+
+            $product = $this->service->createProductForSupplier($validated, $supplierUser);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
+        }
+
+        return ResponseHelper::sendSuccessJsonResponse($product->toArray(), 201);
     }
 
     /**

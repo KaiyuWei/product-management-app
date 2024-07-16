@@ -23,7 +23,7 @@ class CustomerFactory extends Factory
         ];
     }
 
-    public function createSupplierWithRole()
+    public function createCustomerWithRole()
     {
         $userData = [
             'name' => $this->faker->name,

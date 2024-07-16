@@ -30,7 +30,7 @@ class UserModelTest extends TestCase
 
     public function test_user_with_customer_role_returns_customer_instance()
     {
-        $authUser = Customer::factory()->createSupplierWithRole();
+        $authUser = Customer::factory()->createCustomerWithRole();
         $expectedCustomer = Customer::find(1);
 
         $this->assertInstanceOf(Customer::class, $authUser->roleInstance);

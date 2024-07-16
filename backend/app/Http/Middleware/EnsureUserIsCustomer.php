@@ -22,6 +22,6 @@ class EnsureUserIsCustomer
             return $next($request);
         }
 
-        return ResponseHelper::sendErrorJsonResponse("Customer authentication required", 401);
+        return ResponseHelper::sendErrorJsonResponse("Customer authentication required", 403);
     }
 }
