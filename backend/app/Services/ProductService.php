@@ -60,9 +60,7 @@ class ProductService
 
     public function reduceProductStock(int $productId, int $supplierId, int $buyingQuantity): void
     {
-        $supplier = Supplier::with(['products' => function (Builder $query) use ($productId) {
-            $query->where('products.id', $productId);
-        }])->find($supplierId);
+        $supplier = $this->getSupplierWithProductsLoaded($supplierId, $productId);
 
         $currentQuantity = $supplier->products->first()->pivot->stock_quantity;
         $newQuantity = $currentQuantity-$buyingQuantity;
@@ -71,6 +69,20 @@ class ProductService
             throw new \Exception("stock is not enough for this order", 409);
         }
 
+        $this->updateProductStock($supplier, $productId, $newQuantity);
+    }
+
+    private function getSupplierWithProductsLoaded(int $supplierId, ?int $productId)
+    {
+        if(!$productId) return Supplier::with('products')->find($supplierId);
+
+        return Supplier::with(['products' => function (Builder $query) use ($productId) {
+            $query->where('products.id', $productId);
+        }])->find($supplierId);
+    }
+
+    private function updateProductStock(Supplier $supplier, int $productId, int $newQuantity)
+    {
         $supplier->products()->updateExistingPivot($productId, [
             'stock_quantity' => $newQuantity,
         ]);

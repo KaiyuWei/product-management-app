@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -25,7 +26,12 @@ class OrderController extends Controller
         $validated = $request->validated();
         $user = Auth::user()->load('customer');
 
-        $order = $this->service->createOrderForUser($user, $validated);
+        try {
+            $order = $this->service->createOrderForUser($user, $validated);
+        } catch(\Exception $e) {
+            return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
+        }
+
         return ResponseHelper::sendSuccessJsonResponse(['orderId' => $order->id]);
     }
 }

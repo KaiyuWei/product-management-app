@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/product/index', [ProductController::class, 'indexForCustomer']);
         Route::get('/cart/products', [CartController::class, 'getAllProductsInCart']);
         Route::post('/cart/add', [CartController::class, 'addItemInCartForCurrentUser']);
-        Route::post('order/buy', [OrderController::class, 'placeOrder']);
+        Route::post('/order/buy', [OrderController::class, 'placeOrder']);
     });
 });
 

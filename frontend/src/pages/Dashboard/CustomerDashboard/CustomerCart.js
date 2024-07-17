@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import axios from "../../../config/axios";
 import DataTable from "../../../components/DataTable";
+import {toast} from "react-toastify";
 
 export default function CustomerCart() {
     const [cartData, setCartData] = useState([]);
@@ -30,7 +31,13 @@ export default function CustomerCart() {
     }
 
     const buyProductsInCart = async () => {
-        console.log(cartData);
+        try {
+            const response = await axios.post('/order/buy', cartData);
+            toast.success("Congradulations!");
+            fetchAndSetCartData();
+        }catch(e) {
+            toast.error(e.response);
+        }
     }
 
     useEffect(() => {

@@ -120,12 +120,14 @@ class CreateOrderTest extends TestCase
         $data = [
             [
                 'productId' => 1,
-                'quantity' => 2,
+                'supplierId' => $this->supplierUser->id,
+                'quantity' => 400,
                 'totalPrice' => 200,
             ],
             [
                 'productId' => 2,
-                'quantity' => 1,
+                'supplierId' => $this->supplierUser->id,
+                'quantity' => 300,
                 'totalPrice' => 100,
             ],
         ];

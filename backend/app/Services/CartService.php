@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Users\Customer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -50,6 +51,11 @@ class CartService
         return $this->formatCartItemsForIndexRequest($items);
     }
 
+    public function removeCartItemsForCustomer(Customer $customer) {
+        $cartId = $customer->cart->id;
+        CartItem::where('cart_id', $cartId)->delete();
+    }
+
     private function formatCartItemsForIndexRequest(Collection $items): Collection
     {
         $result = [];
@@ -58,6 +64,7 @@ class CartService
 
             $result[] = [
                 'productId' => $product->id,
+                'supplierId' => $item->supplier_id,
                 'productName' => $product->name,
                 'quantity' => $item->quantity,
                 'totalPrice' => $item->item_price,

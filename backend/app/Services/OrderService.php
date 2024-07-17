@@ -19,9 +19,15 @@ class OrderService
         $price = $this->calcTotalOrderPriceFromData($data);
 
         DB::beginTransaction();
-        $order = Order::create(['customer_id' => $user->customer->id, 'price' =>  $price]);
-        $this->addProductFromStockToOrder($order, $data);
-        DB::commit();
+        try {
+            $order = Order::create(['customer_id' => $user->customer->id, 'price' =>  $price]);
+            $this->addProductFromStockToOrder($order, $data);
+            (new CartService())->removeCartItemsForCustomer($user->customer);
+            DB::commit();
+        } catch(\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
         return $order;
     }
@@ -35,13 +41,17 @@ class OrderService
     {
         return $data->map(function($item) use ($order) {
             $productId = $item['productId'];
-            $supplierOrigin = User::with('supplier')->find($item['supplierId']);
             $buyingQuantity = $item['quantity'];
 
             DB::beginTransaction();
-            $this->removeQuantityFromProductStock($productId, $supplierOrigin->supplier->id, $buyingQuantity);
-            $orderItem = $this->addProductToOrder($order->id, $supplierOrigin->supplier->id, $productId, $item['quantity'], $item['totalPrice']);
-            DB::commit();
+            try {
+                $this->removeQuantityFromProductStock($productId, $item['supplierId'], $buyingQuantity);
+                $orderItem = $this->addProductToOrder($order->id, $item['supplierId'], $productId, $item['quantity'], $item['totalPrice']);
+                DB::commit();
+            } catch(\Exception $e) {
+                DB::rollBack();
+                throw $e;
+            }
 
             return $orderItem;
         });
