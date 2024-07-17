@@ -7,8 +7,9 @@ use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Middleware\EnsureUserIsSupplier;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->withoutMiddleware(EnsureFrontendRequestsAreStateful::class);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -21,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware(EnsureUserIsCustomer::class)->group(function(){
         Route::get('/product/index', [ProductController::class, 'indexForCustomer']);
+        Route::get('/cart/products', [CartController::class, 'getAllProductsInCart']);
         Route::post('/cart/add', [CartController::class, 'addItemInCartForCurrentUser']);
     });
 });

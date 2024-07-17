@@ -12,14 +12,18 @@ export default function ProductCard ({name, productId, price, inStock, descripti
         setLoading(true);
 
         try {
-            const res= await axios.post('/api/cart/add', {productId, quantity, price});
+            const res= await axios.post('/cart/add', {productId, quantity, price});
 
             toast.success(`${quantity} ${name} added to your cart!`);
 
         } catch (err) {
             setLoading(false);
-            toast.error(err.response.data.error);
+            toast.error(err.response.data.message);
         }
+    }
+
+    const handleQuantityChange = (e) => {
+        console.log(e.target);
     }
 
 
@@ -37,7 +41,7 @@ export default function ProductCard ({name, productId, price, inStock, descripti
                 </ul >
                 <div className = "mt-2 grid grid-cols-2 gap-2" >
                     <Stack className="px-2 overflow-hidden">
-                        <InputNumber min={0} placeholder="Number"/>
+                        <InputNumber min={0} placeholder="Number" onChange={(value) => {setQuantity(value)}}/>
                     </Stack>
                     <button type="button" className="btn btn-primary" onClick={handleClick}>Add To Cart</button >
                 </div >

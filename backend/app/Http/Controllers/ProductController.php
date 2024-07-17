@@ -50,7 +50,6 @@ class ProductController extends Controller
 
             $product = $this->service->createProductForSupplier($validated, $supplierUser);
         } catch (\Exception $e) {
-            Log::info($e->getMessage());
             return ResponseHelper::sendErrorJsonResponse($e->getMessage(), $e->getCode());
         }
 

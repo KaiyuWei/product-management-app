@@ -39,8 +39,6 @@ class ProductIndexTest extends TestCase
     {
         $response = $this->actingAs($this->supplierUser)->getJson('/api/product/index');
 
-        Log::info($response->getContent());
-
         $response->assertStatus(200);
         $response->assertJsonCount(10);
         $response->assertJsonStructure([

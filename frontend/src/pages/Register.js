@@ -15,6 +15,8 @@ export default function Register() {
         e.preventDefault();
         setLoading(true);
 
+        // const requestUrl = process.env.REACT_APP_API + '/register';
+
         try {
             const res= await axios.post('/register', {name, role, email, password});
             toast.success(`A ${role} is successfully registered`);

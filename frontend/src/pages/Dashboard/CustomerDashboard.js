@@ -1,12 +1,9 @@
 import React, {useState, useEffect, createContext, useContext} from "react";
 import axios from "../../config/axios";
 
-import Modal from "../../components/Modal";
-import DataTable from "../../components/DataTable";
 import Tabs from "../../components/DashboardTabs";
-import {findAllByDisplayValue} from "@testing-library/react";
-import UserCart from "./components/UserCart";
-import UserOrderHistory from "./components/UserOrderHistory";
+import CustomerCart from "./CustomerDashboard/CustomerCart";
+import CustomerOrderHistory from "./CustomerDashboard/CustomerOrderHistory";
 
 
 
@@ -26,8 +23,8 @@ export default function CustomerDashboard () {
     const closeModal = () => setShowModal(false);
 
     const tabs = {
-        Cart: UserCart(),
-        Orders: UserOrderHistory(),
+        Cart: CustomerCart(),
+        Orders: CustomerOrderHistory(),
     };
 
     const fetchProducts = async () => {

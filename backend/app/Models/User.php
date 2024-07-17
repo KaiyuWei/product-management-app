@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -54,7 +55,7 @@ class User extends Authenticatable
 
     public function roleInstance()
     {
-        switch($this->role) {
+        switch ($this->role) {
             case 'supplier':
                 return $this->hasOne(Supplier::class);
             case 'customer':
@@ -62,5 +63,15 @@ class User extends Authenticatable
             default:
                 throw new \Exception('Unrecognized role', 400);
         }
+    }
+
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    public function supplier(): HasOne
+    {
+        return $this->hasOne(Supplier::class);
     }
 }

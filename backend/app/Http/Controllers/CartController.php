@@ -8,6 +8,7 @@ use App\Services\CartService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -22,13 +23,23 @@ class CartController extends Controller
     public function addItemInCartForCurrentUser(addItemToCartRequest $request): JsonResponse
     {
         $validated = $request->validated();
+        $user = Auth::user();
 
-        $this->service->addItemInCartForCurrentUser(
+        $this->service->addItemInCartForUser(
+            $user,
             $validated['productId'],
             $validated['quantity'],
-            $validated['unitPrice']
+            $validated['price']
         );
 
         return ResponseHelper::sendSuccessJsonResponse(['status' => 'success']);
+    }
+
+    public function getAllProductsInCart(): JsonResponse
+    {
+        $user = Auth::user();
+        $items = $this->service->getAllCartItemsForUser($user);
+
+        return ResponseHelper::sendSuccessJsonResponse($items->toArray());
     }
 }
