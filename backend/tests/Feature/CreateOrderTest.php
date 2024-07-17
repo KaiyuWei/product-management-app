@@ -8,6 +8,7 @@ use App\Models\Users\Supplier;
 use App\Services\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class CreateOrderTest extends TestCase
@@ -25,12 +26,12 @@ class CreateOrderTest extends TestCase
         $this->customerUser = Customer::factory()->createCustomerWithRoleAndCart();
         $this->supplierUser = Supplier::factory()->createSupplierWithRole();
 
-        for($i = 0; $i < 10; $i++){
+        for($i = 0; $i < 2; $i++){
             $data = [
                 'name' => $this->faker->company,
                 'price' => $this->faker->randomFloat(2, 1, 1000),
                 'description' => $this->faker->text(200),
-                'quantity' => 500
+                'quantity' => 1000
             ];
 
             (new ProductService())->createProductForSupplier($data, $this->supplierUser);
@@ -42,11 +43,13 @@ class CreateOrderTest extends TestCase
         $data = [
             [
                 'productId' => 1,
+                'supplierId' => $this->supplierUser->id,
                 'quantity' => 400,
                 'totalPrice' => 200,
             ],
             [
                 'productId' => 2,
+                'supplierId' => $this->supplierUser->id,
                 'quantity' => 300,
                 'totalPrice' => 100,
             ],
@@ -68,27 +71,27 @@ class CreateOrderTest extends TestCase
         $this->assertDatabaseHas('order_items', [
             'order_id' => $order->id,
             'product_id' => 1,
-            'quantity' => 2,
+            'quantity' => 400,
             'item_price' => 200,
         ]);
 
         $this->assertDatabaseHas('order_items', [
             'order_id' => $order->id,
             'product_id' => 2,
-            'quantity' => 1,
+            'quantity' => 300,
             'item_price' => 100,
         ]);
 
         $this->assertDatabaseHas('product_supplier', [
             'product_id' => 1,
             'supplier_id' => $this->supplierUser->supplier->id,
-            'stock_quantity' => 100
+            'stock_quantity' => 600
         ]);
 
         $this->assertDatabaseHas('product_supplier', [
             'product_id' => 2,
             'supplier_id' => $this->supplierUser->supplier->id,
-            'stock_quantity' => 200
+            'stock_quantity' => 700
         ]);
     }
 

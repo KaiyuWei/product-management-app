@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Users\Supplier;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -57,14 +58,21 @@ class ProductService
         return $product;
     }
 
-    public function updateProductQuantity(int $id, int $supplierId, int $changing): void
+    public function reduceProductStock(int $productId, int $supplierId, int $buyingQuantity): void
     {
-        $product = Product::find($id);
+        $supplier = Supplier::with(['products' => function (Builder $query) use ($productId) {
+            $query->where('products.id', $productId);
+        }])->find($supplierId);
 
-        // $changingQuantity Can be positive or negative
-        $newQuantity = max($product->quantity + $changing, 0);
+        $currentQuantity = $supplier->products->first()->pivot->stock_quantity;
+        $newQuantity = $currentQuantity-$buyingQuantity;
 
-        $product->quantity = $newQuantity;
-        $product->save();
+        if ($newQuantity < 0) {
+            throw new \Exception("stock is not enough for this order", 409);
+        }
+
+        $supplier->products()->updateExistingPivot($productId, [
+            'stock_quantity' => $newQuantity,
+        ]);
     }
 }

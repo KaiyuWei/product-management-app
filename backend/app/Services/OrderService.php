@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -32,14 +33,14 @@ class OrderService
 
     private function addProductFromStockToOrder(Order $order, Collection $data): Collection
     {
-        return $data->map(function($item) use ($order, $data) {
+        return $data->map(function($item) use ($order) {
             $productId = $item['productId'];
             $supplierOrigin = User::with('supplier')->find($item['supplierId']);
             $buyingQuantity = $item['quantity'];
 
             DB::beginTransaction();
             $this->removeQuantityFromProductStock($productId, $supplierOrigin->supplier->id, $buyingQuantity);
-            $orderItem = $this->addProductToOrder($order->id, $productId, $item['quantity'], $item['totalPrice']);
+            $orderItem = $this->addProductToOrder($order->id, $supplierOrigin->supplier->id, $productId, $item['quantity'], $item['totalPrice']);
             DB::commit();
 
             return $orderItem;
@@ -48,14 +49,14 @@ class OrderService
 
     private function removeQuantityFromProductStock(int $productId, int $supplierId, int $buyingQuantity)
     {
-        // todo: update stock quantity from one supplier
-        (new ProductService())->updateProductQuantity($productId, $supplierId, -$buyingQuantity);
+        (new ProductService())->reduceProductStock($productId, $supplierId, $buyingQuantity);
     }
 
-    private function addProductToOrder(int $orderId, int $productId, int $quantity, float $price)
+    private function addProductToOrder(int $orderId, int $supplierId, int $productId, int $quantity, float $price)
     {
         return OrderItem::create([
             'order_id' => $orderId,
+            'supplier_id' => $supplierId,
             'product_id' => $productId,
             'quantity' => $quantity,
             'item_price' => $price
