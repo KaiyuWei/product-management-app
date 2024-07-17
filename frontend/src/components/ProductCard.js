@@ -3,7 +3,7 @@ import { InputNumber, Stack } from 'rsuite';
 import axios from "../config/axios";
 import {toast} from "react-toastify";
 
-export default function ProductCard ({name, productId, price, inStock, description, supplierName, publishDate}) {
+export default function ProductCard ({name, productId, price, inStock, description, supplierName, supplierId, publishDate}) {
     const [loading, setLoading] = useState(false);
     const [quantity, setQuantity] = useState(0);
 
@@ -12,7 +12,7 @@ export default function ProductCard ({name, productId, price, inStock, descripti
         setLoading(true);
 
         try {
-            const res= await axios.post('/cart/add', {productId, quantity, price});
+            const res= await axios.post('/cart/add', {productId, supplierId, quantity, price});
 
             toast.success(`${quantity} ${name} added to your cart!`);
 
@@ -21,12 +21,6 @@ export default function ProductCard ({name, productId, price, inStock, descripti
             toast.error(err.response.data.message);
         }
     }
-
-    const handleQuantityChange = (e) => {
-        console.log(e.target);
-    }
-
-
 
     return (
         <div className="card" style= {{width: '18rem'}} >

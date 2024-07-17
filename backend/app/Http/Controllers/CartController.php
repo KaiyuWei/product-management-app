@@ -28,6 +28,7 @@ class CartController extends Controller
         $this->service->addItemInCartForUser(
             $user,
             $validated['productId'],
+            $validated['supplierId'],
             $validated['quantity'],
             $validated['price']
         );

@@ -4,35 +4,37 @@ import DataTable from "../../../components/DataTable";
 
 export default function CustomerCart() {
     const [cartData, setCartData] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
     const columns = ['product name', 'quantity', 'total price'];
 
     const normalizeProductDataForDisplaying = (products) => {
-        const normalized = [];
-
-        products.map(function(row) {
-            const entry = {};
-            entry['product name'] = row.name;
-            entry['quantity'] = row.quantity;
-            entry['total price'] = row.totalPrice;
-
-            normalized.push(entry);
-        })
-
-        return normalized;
+        return products.map((row) => ({
+            'product name': row.productName,
+            'quantity': row.quantity,
+            'total price': row.totalPrice,
+        }));
     }
 
     const fetchProductsInCart = async () => {
         try {
             const response = await axios.get('/cart/products');
-            setCartData(response.data);
-            console.log(response.data);
+            return response.data;
         } catch(e) {
             console.log(e.message);
         }
     }
 
+    const fetchAndSetCartData = async () => {
+        const data = await fetchProductsInCart();
+        setCartData(data);
+    }
+
+    const buyProductsInCart = async () => {
+        console.log(cartData);
+    }
+
     useEffect(() => {
-        fetchProductsInCart();
+        fetchAndSetCartData();
     }, []);
 
     return <>
@@ -44,7 +46,7 @@ export default function CustomerCart() {
                     data = {normalizeProductDataForDisplaying(cartData)}
                 />
             </div >
-            <button type = "button" className = "btn btn-primary" >Buy</button >
+            <button type = "button" className = "btn btn-primary" onClick={buyProductsInCart} >Buy</button >
         </div >
     </>
 }

@@ -31,6 +31,7 @@ export default function UserHome() {
                         inStock = {product.quantity}
                         description = {product.description}
                         supplierName = {supplier.supplierName}
+                        supplierId = {supplier.supplierId}
                         publishDate = {product.publishDate}
                     />);
             });

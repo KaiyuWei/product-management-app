@@ -56,4 +56,15 @@ class ProductService
 
         return $product;
     }
+
+    public function updateProductQuantity(int $id, int $supplierId, int $changing): void
+    {
+        $product = Product::find($id);
+
+        // $changingQuantity Can be positive or negative
+        $newQuantity = max($product->quantity + $changing, 0);
+
+        $product->quantity = $newQuantity;
+        $product->save();
+    }
 }

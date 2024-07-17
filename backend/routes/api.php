@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Middleware\EnsureUserIsSupplier;
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/product/index', [ProductController::class, 'indexForCustomer']);
         Route::get('/cart/products', [CartController::class, 'getAllProductsInCart']);
         Route::post('/cart/add', [CartController::class, 'addItemInCartForCurrentUser']);
+        Route::post('order/buy', [OrderController::class, 'placeOrder']);
     });
 });
 

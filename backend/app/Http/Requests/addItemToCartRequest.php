@@ -10,6 +10,7 @@ class addItemToCartRequest extends FormRequest
     {
         return [
             'productId' => 'required|numeric',
+            'supplierId' => 'required|numeric',
             'quantity' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:0'
         ];
