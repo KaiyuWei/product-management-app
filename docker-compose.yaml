@@ -19,8 +19,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: laravel_server
-    volumes:
-      - ./backend:/var/www
     ports:
       - "8000:8000"
     environment:
