@@ -1,5 +1,6 @@
 import {useAuth} from "../context/auth";
 import UserHome from "./Home/UserHome";
+import SupplierHome from "./Home/SupplierHome";
 
 export default function Home() {
     const [auth, setAuth] = useAuth();
@@ -10,7 +11,7 @@ export default function Home() {
             <div className="mt-2">
             {
                 auth.role === 'supplier' ?
-                    <div>supplier</div> :
+                    <SupplierHome/> :
                     <UserHome/>
             }
         </div>

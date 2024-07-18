@@ -20,8 +20,10 @@ class ProductService
 
         $result = [];
         foreach($suppliers as $supplier) {
+            $currentEntry = [];
             $currentEntry['supplierId'] = $supplier->user_id;
             $currentEntry['supplierName'] = $supplier->user->name;
+
             foreach($supplier->products as $product) {
                 $currentEntry['products'][] = [
                     'id' => $product->id,

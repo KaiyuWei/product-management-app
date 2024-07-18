@@ -46,7 +46,7 @@ export default function CustomerCart() {
 
     return <>
         <div className = "p-3" >
-            <div className = "text-2xl " >Products In Your Cart:</div >
+            <div className = "text-2xl" >Products In Your Cart:</div >
             <div >
                 <DataTable
                     columns = {columns}

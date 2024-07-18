@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
+Route::get('/test', function() {
+    return "hello world";
+})->withoutMiddleware(EnsureFrontendRequestsAreStateful::class);
+
 Route::post('/register', [AuthController::class, 'register'])->withoutMiddleware(EnsureFrontendRequestsAreStateful::class);
 Route::post('/login', [AuthController::class, 'login']);
 

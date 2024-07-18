@@ -23,7 +23,8 @@ export default function Register() {
             navigate("/login");
         } catch (err) {
             setLoading(false);
-            toast.error(err.response.data.error);
+            if (err.response?.data?.error)toast.error(err.response.data.error);
+            console.log(err.message);
         }
     }
 
